@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--取别名 -->
+    <typeAliases>
+        <typeAlias type="com.twsz.entity.bo.UserSeqBo" alias="userSeqBo" />
+        <typeAlias type="com.twsz.entity.bo.UserBo" alias="userBo" />
+        <typeAlias type="com.twsz.entity.po.user.UserPo" alias="userPo" />
+        <typeAlias type="com.twsz.entity.po.user.UserInfoPo" alias="userInfoPo" />
+
+        <typeAlias type="com.twsz.entity.bo.OrderSeqBo" alias="orderSeqBo" />
+        <typeAlias type="com.twsz.entity.bo.OrderBo" alias="orderBo" />
+        <typeAlias type="com.twsz.entity.po.order.OrderPo" alias="orderPo" />
+
+        <typeAlias type="com.twsz.entity.bo.AccountSeqBo" alias="accountSeqBo" />
+        <typeAlias type="com.twsz.entity.bo.AccountBo" alias="accountBo" />
+        <typeAlias type="com.twsz.entity.po.account.AccountPo" alias="accountPo" />
+    </typeAliases>
+</configuration>

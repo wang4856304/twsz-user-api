@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+    <Properties>
+        <Property name="logDir">/data/logs/twsz-user-api</Property>
+    </Properties>
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>-->
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
+        </Console>
+
+        <!-- adminFile -->
+        <RollingFile name="info" fileName="${logDir}/info.log"
+                     filePattern="${logDir}/$${date:yyyy-MM}/%d{yyyy-MM-dd}.admin.info.log.gz">
+            <Filters>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="%d{yyyy.MM.dd HH:mm:ss,SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="1024 MB"/>
+            </Policies>
+        </RollingFile>
+        <RollingFile name="warn" fileName="${logDir}/warn.log"
+                     filePattern="${logDir}/$${date:yyyy-MM}/admin.%d{yyyy-MM-dd}.warn.log.gz">
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="%d{yyyy.MM.dd HH:mm:ss,SSS} %-5level %l %C{36} %L %M - %m%xEx%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="1024 MB"/>
+            </Policies>
+        </RollingFile>
+        <RollingFile name="error" fileName="${logDir}/error.log"
+                     filePattern="${logDir}/$${date:yyyy-MM}/admin.%d{yyyy-MM-dd}.error.log.gz">
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="%d{yyyy.MM.dd HH:mm:ss,SSS} %-5level %l %C{36} %L %M - %m%xEx%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="1024 MB"/>
+            </Policies>
+        </RollingFile>
+
+    </appenders>
+    <loggers>
+        <logger name="twsz" level="debug" additivity="false">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="info"/>
+            <appender-ref ref="warn"/>
+            <appender-ref ref="error"/>
+        </logger>
+        <logger name="com.twsz.dao" level="debug" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <root level="info">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="info"/>
+            <appender-ref ref="warn"/>
+            <appender-ref ref="error"/>
+        </root>
+    </loggers>
+
+</configuration>

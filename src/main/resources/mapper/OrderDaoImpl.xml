@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Order">
+    <insert id="insertOrderSeq" useGeneratedKeys="true" keyProperty="orderSeq" parameterType="orderSeqBo">
+        replace into qt_account_order_seq(stub) values (#{stub})
+    </insert>
+    <insert id="insertOrder" parameterType="orderBo">
+        insert into qt_account_order(order_id, third_order_id, user_id, order_type, custom_type, custom_way, qb_amount, rmb_amount)
+        values(#{orderId}, #{thirdOrderId}, #{userId}, #{orderType}, #{customType}, #{customWay}, #{qbAmount}, #{rmbAmount})
+    </insert>
+    <select id="selectByThirdOrderId" parameterType="orderBo" resultType="orderPo">
+        select order_id orderId, third_order_id thirdOrderId, user_id userId, order_type orderType, custom_type customType,
+        custom_way customWay, qb_amount qbAmount, rmb_amount rmbAmount, order_status orderStatus, operator_time operatorTime from qt_account_order where
+        third_order_id=#{thirdOrderId}
+    </select>
+    <select id="selectByOrderId" parameterType="orderBo" resultType="orderPo">
+        select order_id orderId, third_order_id thirdOrderId, user_id userId, order_type orderType, custom_type customType,
+        custom_way customWay, qb_amount qbAmount, rmb_amount rmbAmount, order_status orderStatus, operator_time operatorTime from qt_account_order where
+        order_id=#{orderId} for update
+    </select>
+
+
+    <update id="updateOrderStatusById" parameterType="orderBo">
+        update qt_account_order set order_status=#{orderStatus} where order_id=#{orderId}
+    </update>
+</mapper>

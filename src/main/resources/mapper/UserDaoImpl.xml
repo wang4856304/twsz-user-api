@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="User">
+    <insert id="insert" parameterType="userBo">
+        insert into qt_new_user(
+        user_id, user_token, token_expire, nick_name, password, phone, user_icon, last_login_time, last_login_ip, device_id, channel_id, login_type,
+        login_source) values(#{userId}, #{userToken}, #{tokenExpire}, #{nickName}, #{password}, #{mobile}, #{userIcon}, #{lastLoginTime}, #{lastLoginIp},
+        #{deviceId}, #{channelId}, #{loginType}, #{loginSource})
+    </insert>
+
+    <select id="selectByMobile" parameterType="userBo" resultType="userPo">
+        select user_id userId, is_login isLogin from qt_new_user where phone=#{mobile}
+    </select>
+
+    <select id="selectByNickName" parameterType="userBo" resultType="userPo">
+        select user_id userId, is_login isLogin from qt_new_user where nick_name=#{nickName}
+    </select>
+
+    <select id="selectByMobileAndPwd" parameterType="userBo" resultType="userPo">
+        select user_id as userId, user_token userToken, nick_name nickName, user_icon userIcon, is_login isLogin from qt_new_user where phone=#{mobile} and password=#{password}
+    </select>
+
+    <update id="updateLastIpAndTime" parameterType="userBo">
+        update qt_new_user set last_login_time=#{lastLoginTime}, last_login_ip=#{lastLoginIp}, is_login=#{isLogin},
+        token_valid=#{tokenValid}, user_token=#{userToken} where phone=#{mobile}
+    </update>
+
+    <select id="selectUserIdByToken" parameterType="userBo" resultType="string">
+        select user_id from qt_new_user where user_token=#{userToken}
+    </select>
+
+    <update id="updateLoginByToken" parameterType="userBo">
+        update qt_new_user set is_login=0, token_valid=0 where user_token=#{userToken}
+    </update>
+
+    <select id="selectUserInfoByToken" parameterType="userBo" resultType="userInfoPo">
+        select user_id userId, token_expire tokenExpire, token_valid tokenValid, nick_name nickName, email, phone mobile, is_login isLogin, user_icon userIcon,
+        push_msg pushMsg, is_recharge isRecharge, status, display, user_level userLevel, channel_id channelId from qt_new_user where user_token=#{userToken}
+    </select>
+
+    <update id="updatePwd" parameterType="userBo">
+        update qt_new_user set password=#{password} where user_token=#{userToken} and password=#{oldPassword}
+    </update>
+
+    <update id="updateResetPwd" parameterType="userBo">
+        update qt_new_user set password=#{password} where user_token=#{userToken}
+    </update>
+</mapper>

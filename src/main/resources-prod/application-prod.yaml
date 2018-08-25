@@ -1,0 +1,47 @@
+server:
+   port: 9800
+logging:
+   config: classpath:log4j2.xml
+
+spring:
+   dataSource:
+      master:
+         driverClassName: com.mysql.jdbc.Driver
+         url: jdbc:mysql://172.18.103.198:3306/qiusheng?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+         username: root
+         password: xatwsz.com
+         initialSize: 20
+         minIdle: 5
+         maxActive: 30
+         maxWait: 30000
+         removeAbandoned: true
+         removeAbandonedTimeoutMillis: 300000
+         defaultAutoCommit: false
+         timeBetweenEvictionRunsMillis: 60000
+         minEvictableIdleTimeMillis: 300000
+         validationQuery: SELECT 1
+         testWhileIdle: true
+         connectionInitSql: set names utf8mb4
+
+   redis:
+#      cluster:
+#         clusterNodes: 172.18.103.198:6379
+#         password: xatwsz.com
+#         expireSeconds: 120
+#         commandTimeout: 10000  #redis操作的超时时间
+#         pool:
+#           maxActive: 8
+#           maxWait: 1000
+#           maxIdle: 8
+#           minIdle: 2
+      noCluster:
+         database: 9
+         host: 172.18.103.198
+         port: 6379
+         password: xatwsz.com
+         maxActive: 8
+         maxWait: 3000
+         maxIdle: 8
+         minIdle: 2
+         timeout: 1000
+         testOnBorrow: true

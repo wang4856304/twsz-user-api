@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Account">
+    <insert id="insertAccountSeq" useGeneratedKeys="true" keyProperty="accountSeq" parameterType="accountSeqBo">
+        replace into qt_account_seq(stub) values (#{stub})
+    </insert>
+
+    <insert id="insertAccount" parameterType="accountBo">
+        insert into qt_user_account(user_account_id, user_id, user_account_type, user_account_name)
+        values(#{userAccountId}, #{userId}, #{userAccountType}, #{userAccountName})
+    </insert>
+
+    <select id="selectAccountByUserIdAndType" parameterType="accountBo" resultType="AccountPo">
+        select user_account_id userAccountId, user_id userId, user_account_type userAccountType, user_account_name userAccountName,
+        amount, status from qt_user_account where user_id=#{userId} and user_account_type=#{userAccountType} for update
+    </select>
+
+    <update id="updateAccountAmount" parameterType="accountBo">
+        update qt_user_account set amount=#{amount} where user_id=#{userId} and user_account_type=#{userAccountType}
+    </update>
+</mapper>
