@@ -26,8 +26,8 @@ public class SendNoticeServiceImpl implements SendNoticeService {
     private String mobile;
     @Value("${project}")
     private String project;
-    @Autowired
-    private ProfileConfig profileConfig;
+    @Value("${env}")
+    private String env;
 
     private static final String delimiter = ",";
 
@@ -46,7 +46,7 @@ public class SendNoticeServiceImpl implements SendNoticeService {
             mobiles = mobiles + "@" + mobile;
         }
         msg = msg + "\n" +mobiles;
-        contentJson.put("content", "[" + ipAddr + "_" + project + "_" + profileConfig.getActive() + "]\n" + msg);
+        contentJson.put("content", "[" + ipAddr + "_" + project + "_" + env + "]\n" + msg);
         reqJson.put("text", contentJson);
 
         JSONObject atJson = new JSONObject();

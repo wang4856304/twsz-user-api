@@ -2,10 +2,8 @@ server:
    port: 9800
 logging:
    config: classpath:log4j2.xml
-
+env: prod
 spring:
-   profiles:
-      active: prod
    dataSource:
       master:
          driverClassName: com.mysql.jdbc.Driver
