@@ -1,7 +1,4 @@
 server:
    port: 9830
-spring:
-   profiles:
-      active: dev
 mobile: 15289288565
 project: qiusheng-user

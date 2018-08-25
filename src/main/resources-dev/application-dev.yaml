@@ -2,6 +2,8 @@ logging:
    config: classpath:log4j2.xml
 
 spring:
+   profiles:
+      active: dev
    dataSource:
       master:
          driverClassName: com.mysql.jdbc.Driver

@@ -1,10 +1,12 @@
 package com.twsz.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.twsz.config.ProfileConfig;
 import com.twsz.exception.BusinessException;
 import com.twsz.service.SendNoticeService;
 import com.twsz.utils.HttpClientUtil;
 import com.twsz.utils.NetUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -24,8 +26,8 @@ public class SendNoticeServiceImpl implements SendNoticeService {
     private String mobile;
     @Value("${project}")
     private String project;
-    @Value("${spring.profiles.active}")
-    private String active;
+    @Autowired
+    private ProfileConfig profileConfig;
 
     private static final String delimiter = ",";
 
@@ -44,7 +46,7 @@ public class SendNoticeServiceImpl implements SendNoticeService {
             mobiles = mobiles + "@" + mobile;
         }
         msg = msg + "\n" +mobiles;
-        contentJson.put("content", "[" + ipAddr + "_" + project + "_" + active + "]\n" + msg);
+        contentJson.put("content", "[" + ipAddr + "_" + project + "_" + profileConfig.getActive() + "]\n" + msg);
         reqJson.put("text", contentJson);
 
         JSONObject atJson = new JSONObject();
