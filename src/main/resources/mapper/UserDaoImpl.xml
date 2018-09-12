@@ -39,10 +39,10 @@
     </select>
 
     <update id="updatePwd" parameterType="userBo">
-        update qt_new_user set password=#{password} where user_token=#{userToken} and password=#{oldPassword}
+        update qt_new_user set password=#{password}, token_valid=0 where user_token=#{userToken} and password=#{oldPassword}
     </update>
 
     <update id="updateResetPwd" parameterType="userBo">
-        update qt_new_user set password=#{password} where user_token=#{userToken}
+        update qt_new_user set password=#{password}, token_valid=0 where user_token=#{userToken}
     </update>
 </mapper>

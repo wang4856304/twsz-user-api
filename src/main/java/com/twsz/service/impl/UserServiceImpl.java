@@ -234,6 +234,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         userBo.setOldPassword(userChangePwdDto.getOldPassword());
         userBo.setPassword(userChangePwdDto.getPassword());
         userDao.updatePwd(userBo);
+        redisService.del(RedisKeyConstant.TOKEN + token);
         return buildSuccesResponse();
     }
 
@@ -255,6 +256,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         userBo.setUserToken(token);
         userBo.setPassword(userResetPwdDto.getPassword());
         userDao.updateResetPwd(userBo);
+        redisService.del(RedisKeyConstant.TOKEN + token);
         return buildSuccesResponse();
     }
 }
