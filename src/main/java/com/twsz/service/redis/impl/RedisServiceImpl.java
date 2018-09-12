@@ -145,6 +145,14 @@ public class RedisServiceImpl implements RedisService {
         return true;
     }
 
+    @Override
+    public boolean exists(String key) {
+        Jedis jedis = getJedis();
+        boolean result = jedis.exists(key);
+        close(jedis);
+        return result;
+    }
+
     private Jedis getJedis() {
         return jedisPool.getResource();
     }
