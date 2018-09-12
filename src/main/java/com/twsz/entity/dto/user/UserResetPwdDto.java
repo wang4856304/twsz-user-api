@@ -22,8 +22,8 @@ public class UserResetPwdDto {
     /**
      * 用户令牌
      */
-    @NotBlank(message = "用户令牌为空")
-    private String token;
+    //@NotBlank(message = "用户令牌为空")
+    //private String token;
 
     /**
      * 电话

@@ -99,11 +99,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
         String userId = createUserId();
         userBo.setUserId(userId);
-        String token = TokenUtil.createToken(userDto.getMobile());
-        userBo.setUserToken(token);
-        Long tokenExpire = DateUtil.delayTime(TOKEN_EXPIRE);
-        userBo.setTokenExpire(tokenExpire);
-        redisService.set(RedisKeyConstant.TOKEN + token, userId, 60*60*24*TOKEN_EXPIRE);
+
         userBo.setPassword(userDto.getPassword());
         userBo.setUserIcon(defaultUserIconUrl);
         userBo.setLastLoginTime(DateUtil.formartDate(new Date(), DateUtil.YYYY_MM_DD_HH_MM_SS));
@@ -117,7 +113,6 @@ public class UserServiceImpl extends BaseService implements UserService {
 
         userPo = new UserPo();
         userPo.setMobile(mobile);
-        userPo.setUserToken(token);
         userPo.setUserId(userId);
         userPo.setNickName(userDto.getNickName());
         userPo.setUserIcon(defaultUserIconUrl);
@@ -154,7 +149,8 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     public Response login(UserLoginDto userLoginDto) {
         UserBo userBo = new UserBo();
-        userBo.setMobile(userLoginDto.getMobile());
+        String mobile = userLoginDto.getMobile();
+        userBo.setMobile(mobile);
         UserPo userPo = userDao.selectByMobile(userBo);
         if (userPo == null) {
             return buildErrorResponse(UserEnum.NOT_REGISDTER.getCode(), UserEnum.NOT_REGISDTER.getMsg());
@@ -168,8 +164,11 @@ public class UserServiceImpl extends BaseService implements UserService {
             return buildErrorResponse(UserEnum.ALREDY_LOGIN_ERROR.getCode(), UserEnum.ALREDY_LOGIN_ERROR.getMsg());
         }
 
-        String token = TokenUtil.createToken(userLoginDto.getMobile());
-        redisService.set(RedisKeyConstant.TOKEN + token, userPo.getUserId(), 60*60*24*TOKEN_EXPIRE);
+        String token = TokenUtil.createToken(mobile);
+        userBo.setUserToken(token);
+        Long tokenExpire = DateUtil.delayTime(TOKEN_EXPIRE);
+        userBo.setTokenExpire(tokenExpire);
+        redisService.set(RedisKeyConstant.TOKEN + token, mobile, 60*60*24*TOKEN_EXPIRE);
 
         userBo.setLastLoginTime(DateUtil.formartDate(new Date(), DateUtil.YYYY_MM_DD_HH_MM_SS));
         userBo.setLastLoginIp(userLoginDto.getRemoteIp());
@@ -177,7 +176,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         userBo.setTokenValid(TOKEN_VALID);
         userBo.setUserToken(token);
         userDao.updateLastIpAndTime(userBo);
-        userPo.setMobile(userLoginDto.getMobile());
+        userPo.setMobile(mobile);
         userPo.setUserToken(token);
         userPo.setIsLogin(LOGIN_IN);
         return buildSuccesResponse(userPo);
@@ -188,7 +187,8 @@ public class UserServiceImpl extends BaseService implements UserService {
         if (!checkToken(token)) {
             return buildErrorResponse(ErrorEnum.TOKEN_EXPIRED.getCode(), ErrorEnum.TOKEN_EXPIRED.getMsg());
         }
-        redisService.del(RedisKeyConstant.TOKEN + token);
+        String mobile = userDao.selectMobileByToken(token);
+        redisService.del(RedisKeyConstant.TOKEN + mobile);
         UserBo userBo = new UserBo();
         userBo.setUserToken(token);
         userDao.updateLoginByToken(userBo);
@@ -197,8 +197,8 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     public Boolean checkToken(String token) {
-        String userId = redisService.get(RedisKeyConstant.TOKEN + token);
-        if (StringUtils.isEmpty(userId)) {
+        boolean isRes = redisService.exists(RedisKeyConstant.TOKEN + token);
+        if (!isRes) {
             return false;
         }
         return true;
@@ -234,7 +234,8 @@ public class UserServiceImpl extends BaseService implements UserService {
         userBo.setOldPassword(userChangePwdDto.getOldPassword());
         userBo.setPassword(userChangePwdDto.getPassword());
         userDao.updatePwd(userBo);
-        redisService.del(RedisKeyConstant.TOKEN + token);
+        String mobile = userDao.selectMobileByToken(token);
+        redisService.del(RedisKeyConstant.TOKEN + mobile);
         return buildSuccesResponse();
     }
 
@@ -243,19 +244,21 @@ public class UserServiceImpl extends BaseService implements UserService {
         if (!userResetPwdDto.getPassword().equals(userResetPwdDto.getConfirmPassword())) {
             return buildErrorResponse(UserEnum.CONFIRM_PWD_ERROR.getCode(), UserEnum.CONFIRM_PWD_ERROR.getMsg());
         }
-        String token = userResetPwdDto.getToken();
+        /*String token = userResetPwdDto.getToken();
         if (!checkToken(token)) {
             return buildErrorResponse(ErrorEnum.TOKEN_EXPIRED.getCode(), ErrorEnum.TOKEN_EXPIRED.getMsg());
-        }
+        }*/
         String mobile = userResetPwdDto.getMobile();
         String userVerifyCode = redisService.get(RedisKeyConstant.VERIFY_CODE + mobile);
         if (!userResetPwdDto.getVerifyCode().equals(userVerifyCode)) {
             return buildErrorResponse(UserEnum.INVALID_VERIFY_CODE.getCode(), UserEnum.INVALID_VERIFY_CODE.getMsg());
         }
         UserBo userBo = new UserBo();
-        userBo.setUserToken(token);
+        userBo.setMobile(mobile);
         userBo.setPassword(userResetPwdDto.getPassword());
         userDao.updateResetPwd(userBo);
+        UserPo userPo = userDao.selectByMobile(userBo);
+        String token = userPo.getUserToken();
         redisService.del(RedisKeyConstant.TOKEN + token);
         return buildSuccesResponse();
     }

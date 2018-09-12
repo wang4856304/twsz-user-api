@@ -3,6 +3,7 @@ package com.twsz.dao.user;
 import com.twsz.entity.bo.UserBo;
 import com.twsz.entity.po.user.UserInfoPo;
 import com.twsz.entity.po.user.UserPo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * }
@@ -25,4 +26,5 @@ public interface UserDao {
     Integer updateResetPwd(UserBo userBo);
 
     UserPo selectByNickName(UserBo userBo);
+    String selectMobileByToken(@Param("token") String token);
 }

@@ -13,4 +13,5 @@ public interface RedisService {
     <T> T hessianHGet(String key, String filed);
     boolean del(String key);
     boolean hessianDel(String key);
+    boolean exists(String key);
 }

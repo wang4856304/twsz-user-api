@@ -9,7 +9,7 @@
     </insert>
 
     <select id="selectByMobile" parameterType="userBo" resultType="userPo">
-        select user_id userId, is_login isLogin from qt_new_user where phone=#{mobile}
+        select user_id userId, is_login isLogin, user_token userToken from qt_new_user where phone=#{mobile}
     </select>
 
     <select id="selectByNickName" parameterType="userBo" resultType="userPo">
@@ -39,10 +39,14 @@
     </select>
 
     <update id="updatePwd" parameterType="userBo">
-        update qt_new_user set password=#{password}, token_valid=0 where user_token=#{userToken} and password=#{oldPassword}
+        update qt_new_user set password=#{password}, token_valid=0, is_login=0 where user_token=#{userToken} and password=#{oldPassword}
     </update>
 
     <update id="updateResetPwd" parameterType="userBo">
-        update qt_new_user set password=#{password}, token_valid=0 where user_token=#{userToken}
+        update qt_new_user set password=#{password}, token_valid=0, is_login=0 where phone=#{mobile}
     </update>
+
+    <select id="selectMobileByToken" parameterType="string" resultType="string">
+        select phone from qt_new_user where user_token=#{userToken}
+    </select>
 </mapper>

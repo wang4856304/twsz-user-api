@@ -5,6 +5,7 @@ import com.twsz.dao.user.UserDao;
 import com.twsz.entity.bo.UserBo;
 import com.twsz.entity.po.user.UserInfoPo;
 import com.twsz.entity.po.user.UserPo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -70,5 +71,10 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     @Override
     public UserPo selectByNickName(UserBo userBo) {
         return masterSqlSessionTemplate.selectOne("User.selectByNickName", userBo);
+    }
+
+    @Override
+    public String selectMobileByToken(@Param("token") String token) {
+        return masterSqlSessionTemplate.selectOne("User.selectMobileByToken", token);
     }
 }
