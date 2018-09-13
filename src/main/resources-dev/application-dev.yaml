@@ -5,7 +5,7 @@ spring:
    dataSource:
       master:
          driverClassName: com.mysql.jdbc.Driver
-         url: jdbc:mysql://172.16.8.48:3306/wangjun?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+         url: jdbc:mysql://172.16.8.48:3306/wangjun?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
          username: root
          password: 123456
          initialSize: 20

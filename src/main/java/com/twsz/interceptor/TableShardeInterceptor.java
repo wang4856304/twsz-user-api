@@ -35,7 +35,7 @@ public class TableShardeInterceptor implements Interceptor {
         MetaObject metaStatementHandler = MetaObject.forObject(statementHandler, DEFAULT_OBJECT_FACTORY, DEFAULT_OBJECT_WRAPPER_FACTORY, REFLECTOR_FACTORY);
         BoundSql boundSql = (BoundSql) metaStatementHandler.getValue("delegate.boundSql");//获取sql语句
         String originSql = boundSql.getSql();
-        log.info("boundSql:" + originSql);
+        //log.info("boundSql:" + originSql);
         if (!StringUtils.isEmpty(originSql)) {
             MappedStatement mappedStatement = (MappedStatement) metaStatementHandler.getValue("delegate.mappedStatement");
             String id = mappedStatement.getId();
@@ -49,7 +49,7 @@ public class TableShardeInterceptor implements Interceptor {
                 Class<?> strategyClazz = tableSharde.strategy();
                 TableStrategy tableStrategy = (TableStrategy)strategyClazz.newInstance();
                 newSql = tableStrategy.doSharde(metaStatementHandler, tableName, shardeBy);
-                log.info("newSql:" + newSql);
+                //log.info("newSql:" + newSql);
                 metaStatementHandler.setValue("delegate.boundSql.sql", newSql);
             }
 
