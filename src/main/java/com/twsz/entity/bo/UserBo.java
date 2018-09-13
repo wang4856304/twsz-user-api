@@ -36,6 +36,11 @@ public class UserBo extends UserDto {
     private String userId;
 
     /**
+     * 用户code
+     */
+    private String userCode;
+
+    /**
      * 邮箱
      */
     private String email;

@@ -5,9 +5,9 @@ spring:
    dataSource:
       master:
          driverClassName: com.mysql.jdbc.Driver
-         url: jdbc:mysql://172.18.103.199:3306/qiusheng_account?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+         url: jdbc:mysql://172.16.8.48:3306/wangjun?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
          username: root
-         password: xatwsz.com
+         password: 123456
          initialSize: 20
          minIdle: 5
          maxActive: 30

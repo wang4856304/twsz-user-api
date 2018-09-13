@@ -1,8 +1,10 @@
 package com.twsz.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.twsz.interceptor.TableShardeInterceptor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -109,6 +111,7 @@ public class MasterDBConfig {
         sqlSessionFactoryBean.setDataSource(dataSource);
         sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
         sqlSessionFactoryBean.setConfigLocation(new PathMatchingResourcePatternResolver().getResource("classpath:mybatis-config.xml"));
+        sqlSessionFactoryBean.setPlugins(new Interceptor[] {new TableShardeInterceptor()});
         return sqlSessionFactoryBean.getObject();
     }
 

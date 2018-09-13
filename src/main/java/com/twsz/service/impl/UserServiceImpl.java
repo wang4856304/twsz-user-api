@@ -187,8 +187,8 @@ public class UserServiceImpl extends BaseService implements UserService {
         if (!checkToken(token)) {
             return buildErrorResponse(ErrorEnum.TOKEN_EXPIRED.getCode(), ErrorEnum.TOKEN_EXPIRED.getMsg());
         }
-        String mobile = userDao.selectMobileByToken(token);
-        redisService.del(RedisKeyConstant.TOKEN + mobile);
+        //String mobile = userDao.selectMobileByToken(token);
+        redisService.del(RedisKeyConstant.TOKEN + token);
         UserBo userBo = new UserBo();
         userBo.setUserToken(token);
         userDao.updateLoginByToken(userBo);
