@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class ShardeByUserCodeStrategy implements TableStrategy {
     @Override
-    public String doSharde(MetaObject metaStatementHandler, String tableName, String[] shardeBy) {
+    public String doSharde(MetaObject metaStatementHandler, String tableName, String[] shardeBy) throws Exception{
         BoundSql boundSql = (BoundSql) metaStatementHandler.getValue("delegate.boundSql");//获取sql语句
         String originSql = boundSql.getSql();
         boundSql.getParameterMappings();
@@ -32,24 +32,18 @@ public class ShardeByUserCodeStrategy implements TableStrategy {
             originSql = originSql.replaceAll(tableName, tableName + "_" + value);
         }
         else {
-            try {
-                Class<?> clazz = parameterObject.getClass();
-                String value = "";
-                Field[] fields = clazz.getDeclaredFields();
-                for (Field field: fields) {
-                    field.setAccessible(true);
-                    String fieldName = field.getName();
-                    if (fieldName.equals(userCode)) {
-                        value = field.get(parameterObject).toString();
-                        break;
-                    }
+            Class<?> clazz = parameterObject.getClass();
+            String value = "";
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field: fields) {
+                field.setAccessible(true);
+                String fieldName = field.getName();
+                if (fieldName.equals(userCode)) {
+                    value = field.get(parameterObject).toString();
+                    break;
                 }
-                originSql = originSql.replaceAll(tableName, tableName + "_" + value);
             }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-
+            originSql = originSql.replaceAll(tableName, tableName + "_" + value);
         }
         return originSql;
     }
